@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Animated from 'react-native-reanimated'
-import { DEFAULT_CONTAINER_WIDTH } from '../constants'
 import { ScrollView } from 'react-native-gesture-handler'
+import { DEFAULT_CONTAINER_WIDTH } from '../constants'
 
 type Props = {
   initialPage: number
@@ -24,41 +24,41 @@ class ScrollableContentIos extends Component<Props> {
     }
   }
 
-  render() {
+  render () {
     return (
       <>
         <Animated.ScrollView
           horizontal
           pagingEnabled
-          automaticallyAdjustContentInsets={false}
-          contentOffset={{ x: this.props.initialPage * this.props.containerWidth }}
-          ref={this.props.onRef}
-          onScroll={Animated.event([
+          automaticallyAdjustContentInsets={ false }
+          contentOffset={ { x: this.props.initialPage * this.props.containerWidth } }
+          ref={ this.props.onRef }
+          onScroll={ Animated.event([
             { nativeEvent: { contentOffset: { x: this.props.scrollXIOS } } },
-          ])}
-          onMomentumScrollBegin={this._onMomentumScrollBeginAndEnd}
-          onMomentumScrollEnd={this._onMomentumScrollBeginAndEnd}
-          scrollEventThrottle={16}
-          scrollsToTop={false}
-          showsHorizontalScrollIndicator={false}
-          scrollEnabled={!this.props.locked}
+          ]) }
+          onMomentumScrollBegin={ this._onMomentumScrollBeginAndEnd }
+          onMomentumScrollEnd={ this._onMomentumScrollBeginAndEnd }
+          scrollEventThrottle={ 16 }
+          scrollsToTop={ false }
+          showsHorizontalScrollIndicator={ false }
+          scrollEnabled={ !this.props.locked }
           directionalLockEnabled
-          alwaysBounceVertical={false}
+          alwaysBounceVertical={ false }
           keyboardDismissMode='on-drag'
-          {...this.props.contentProps}
+          { ...this.props.contentProps }
         >
-          {this.props.children}
+          { this.props.children }
         </Animated.ScrollView>
-        {/* <Animated.Code
-          exec={Animated.block([
-            Animated.call([this.scrollXIOS], (value) => {
+        <Animated.Code
+          exec={ Animated.block([
+            Animated.call([ this.props.scrollXIOS ], (value) => {
               console.log(value)
               if (this.props.onScroll) {
-                this.props.onScroll(value[0] / this.props.containerWidth)
+                this.props.onScroll(value[ 0 ] / this.props.containerWidth)
               }
             }),
-          ])}
-        /> */}
+          ]) }
+        />
       </>
     )
   }
