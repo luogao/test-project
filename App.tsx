@@ -5,6 +5,7 @@ import BetterImage from './src/BetterImage'
 import SmallImage from './src/SmallImage'
 const DEFAULT_IMAGE_URL = 'https://placeimg.com/640/640/any'
 import FacebookExample from './src/FacebookExample'
+import DoubleTap from './src/DoubleTap'
 
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
@@ -15,32 +16,24 @@ const images = [
   'https://i.pinimg.com/564x/af/51/f5/af51f503419b63dd21cff6d392aa584e.jpg',
 ]
 
-export default function App () {
+export default function App() {
   const testImg1 =
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356921&di=bc5c9d7ce4914560833910f2d138353f&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fd62a6059252dd42a1c362a29033b5bb5c9eab870.jpg'
   const testImg2 =
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356919&di=55acd8a776a2d38b8a610b693a6af639&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F20%2F62%2F01000000000000119086280352820.jpg'
 
-  const [ image, setImage ] = useState(testImg1)
+  const [image, setImage] = useState(testImg1)
 
   const handlePress = (item) => {
     console.log('handlePress')
     setImage(item)
   }
-  return null
-  // return (
-  //   // <View style={[styles.container]}>
-  //   //   <Text style={styles.text}>Open up App.tsx to start working on your app!</Text>
-  //   //   <Text style={styles.text}>666</Text>
-
-  //   //   <BetterImage source={image} />
-
-  //   //   {images.map((i: string) => {
-  //   //     return <SmallImage key={i} item={i} onPress={handlePress} />
-  //   //   })}
-  //   // </View>
-  //   // <FacebookExample />
-  // )
+  // return <PressBox />
+  return (
+    <View style={[styles.container]}>
+      <DoubleTap />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
