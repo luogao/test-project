@@ -6,6 +6,10 @@ import SmallImage from './src/SmallImage'
 const DEFAULT_IMAGE_URL = 'https://placeimg.com/640/640/any'
 import FacebookExample from './src/FacebookExample'
 import DoubleTap from './src/DoubleTap'
+import CircularProgressBar from './src/CircularProgressBar'
+import Animated from 'react-native-reanimated'
+import { timing } from 'react-native-redash'
+import HalfCircle from './src/CircularProgressBar/HalfCircle'
 
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
@@ -29,9 +33,39 @@ export default function App() {
     setImage(item)
   }
   // return <PressBox />
+
+  const process = timing({ duration: 1000 })
   return (
     <View style={[styles.container]}>
-      <DoubleTap />
+      <CircularProgressBar
+        backgroundColor='#000'
+        Radius={100}
+        barColor='#fff'
+        process={process}
+        BarSize={10}
+        trackColor="orange"
+      />
+
+      <View
+        style={{
+          width: 200,
+          height: 200,
+          marginTop: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <View style={{ position: 'absolute' }}>
+          <HalfCircle Radius={100} BGColor='#fff' />
+        </View>
+        <View
+        // style={{
+        //   transform: [{ translateY: 100 / 2 }, { rotate: '60deg' }, { translateY: -100 / 2 }],
+        // }}
+        >
+          <HalfCircle Radius={100.5} BGColor='#000' />
+        </View>
+      </View>
     </View>
   )
 }
@@ -39,7 +73,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
   },
