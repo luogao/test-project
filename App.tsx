@@ -10,6 +10,8 @@ import CircularProgressBar from './src/CircularProgressBar'
 import Animated from 'react-native-reanimated'
 import { timing } from 'react-native-redash'
 import Wallet from './src/Wallet'
+import Swiper from './src/Swiper'
+import TabViewExample from './src/TabView'
 
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
@@ -20,13 +22,13 @@ const images = [
   'https://i.pinimg.com/564x/af/51/f5/af51f503419b63dd21cff6d392aa584e.jpg',
 ]
 
-export default function App() {
+export default function App () {
   const testImg1 =
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356921&di=bc5c9d7ce4914560833910f2d138353f&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fd62a6059252dd42a1c362a29033b5bb5c9eab870.jpg'
   const testImg2 =
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356919&di=55acd8a776a2d38b8a610b693a6af639&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F20%2F62%2F01000000000000119086280352820.jpg'
 
-  const [image, setImage] = useState(testImg1)
+  const [ image, setImage ] = useState(testImg1)
 
   const handlePress = (item) => {
     console.log('handlePress')
@@ -35,8 +37,9 @@ export default function App() {
   // return <PressBox />
 
   const process = timing({ duration: 1000 })
+  // return <TabViewExample />
   return (
-    <View style={[styles.container]}>
+    <View style={ [ styles.container ] }>
       {/* <CircularProgressBar
         backgroundColor='#000'
         Radius={100}
@@ -46,7 +49,9 @@ export default function App() {
         trackColor="orange"
       /> */}
 
-      <Wallet />
+      {/* <Wallet /> */ }
+      <Swiper />
+
     </View>
   )
 }
