@@ -146,6 +146,7 @@ export default class Swiper extends Component<Props> {
           not(clockRunning(this.clock)),
           [
             set(this.initialVelocityForSpring, multiply(this.velocityX, this.springVelocityScale)),
+            cond(not(clockRunning(this.clock)), startClock(this.clock)),
             spring(
               this.clock,
               { ...state, velocity: this.initialVelocityForSpring },
@@ -155,7 +156,6 @@ export default class Swiper extends Component<Props> {
           timing(this.clock, { ...state, frameTime }, { ...TIMING_CONFIG, toValue })
         ),
       ]),
-      cond(not(clockRunning(this.clock)), startClock(this.clock)),
       cond(state.finished, [
         // Reset values
         set(this.isSwipeGesture, FALSE),

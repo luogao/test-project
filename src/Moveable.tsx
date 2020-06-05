@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import Animated, { event, Value, block, cond, eq, add, set, call } from 'react-native-reanimated';
-import { clamp, withDecay } from 'react-native-redash';
+import Animated, { event, Value, block, cond, eq, add, set, call, Clock, } from 'react-native-reanimated';
+import { clamp, withDecay, snapPoint, timing } from 'react-native-redash';
 import { Dimensions } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width
@@ -16,6 +16,9 @@ const endPosition = {
   x: (windowWidth - boxWidth) / 2,
   y: -(windowHeight - boxHeight) / 2
 }
+
+const snapPointsX = [ startPosition.x, endPosition.x ]
+const snapPointsY = [ startPosition.y, endPosition.y ]
 class Moveable extends Component {
 
   private gestureY = new Value<number>(0)
@@ -25,28 +28,27 @@ class Moveable extends Component {
   private velocityY = new Value<number>(0)
   private velocityX = new Value<number>(0)
   private gestureState = new Value<State>(State.UNDETERMINED)
+  private translateX = new Value<number>(startPosition.x)
+  private translateY = new Value<number>(startPosition.y)
+  private clockX = new Clock()
+  private clockY = new Clock()
 
 
-  private translateX = block([
-    cond(eq(this.gestureState, State.END),
-      [
-        set(this.offsetX, add(this.offsetX, this.gestureX)),
-        this.offsetX
-      ],
-      [
-        add(this.offsetX, this.gestureX)
-      ]
-    ),
-  ])
+  // private translateX = block([
+  //   cond(
+  //     eq(this.gestureState, State.END),
+  //     [
+  //       set(this.offsetX, add(this.offsetX, this.gestureX)),
+  //       set(this.offsetX, timing({ clock: this.clock, from: this.offsetX, to: snapPoint(this.offsetX, this.velocityX, snapPoints) })),
+  //       this.offsetX
+  //     ],
+  //     [
 
-  private translateY = block([
-    cond(eq(this.gestureState, State.END), [
-      set(this.offsetY, add(this.offsetY, this.gestureY)),
-      this.offsetY
-    ], [
-      add(this.offsetY, this.gestureY)
-    ])
-  ])
+  //     ]
+  //   ),
+  //   cond(eq(this.gestureState, State.ACTIVE), [ add(this.offsetX, this.gestureX) ])
+  // ])
+
 
 
   private position = {
@@ -84,14 +86,14 @@ class Moveable extends Component {
             zIndex: 1000,
             transform: [
               {
-                translateX: this.position.x
+                translateX: this.translateX
               },
               {
-                translateY: this.position.y
+                translateY: this.translateY
               }
             ]
           } }>
-
+            { this.props.children }
           </Animated.View>
 
         </PanGestureHandler>
@@ -99,7 +101,33 @@ class Moveable extends Component {
           block([
             call([ this.translateX, this.translateY, this.position.x, this.position.y ], (value) => {
               console.log(value)
-            })
+            }),
+            [
+              cond(
+                eq(this.gestureState, State.END),
+                [
+                  // y
+                  set(this.translateY,  timing({ clock: this.clockY, from: this.translateY, to: clamp(this.translateY, endPosition.y, startPosition.y) })),
+                  set(this.offsetY, this.translateY),
+                  // x
+                  set(this.translateX, timing({ clock: this.clockX, from: this.translateX, to: snapPoint(this.translateX, this.velocityX, snapPointsX) })),
+                  set(this.offsetX, this.translateX),
+                ],
+                [
+
+                ]
+              ),
+              cond(
+                eq(this.gestureState, State.ACTIVE),
+                [
+                  // y
+                  set(this.translateY, add(this.offsetY, this.gestureY)),
+                  // x
+                  set(this.translateX, add(this.offsetX, this.gestureX))
+                ]
+              )
+            ]
+
           ])
 
         } />

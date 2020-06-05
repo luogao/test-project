@@ -1,6 +1,5 @@
-import { ReactElement } from "react"
-import { ViewStyle, StyleProp, TextStyle } from "react-native"
-import Animated from "react-native-reanimated"
+import React, { ReactElement, ReactNode } from "react"
+import { ViewStyle, StyleProp, TextStyle, Animated } from "react-native"
 
 export enum TabBarPosition {
   top = 'top',
@@ -9,7 +8,7 @@ export enum TabBarPosition {
   overlayBottom = 'overlayBottom',
 }
 
-export interface Props extends React.Component {
+export interface Props {
   tabBarPosition: TabBarPosition
   initialPage?: number
   page?: number
@@ -26,11 +25,12 @@ export interface Props extends React.Component {
   scrollWithoutAnimation?: boolean
   locked?: boolean
   prerenderingSiblingsNumber?: number
-  parentAnimationValue?: Animated.Value<number>
+  parentAnimationValue?: Animated.Value
+  onChangeDebounce?: number
 }
 
 export type State = {
-  sceneKeys: any[]
+  sceneKeys: string[]
   currentPage: number
   containerWidth: number
 }
@@ -39,7 +39,7 @@ export type TabBarProps = {
   goToPage: (page: number) => void
   tabs: any
   activeTab: number
-  scrollValue: Animated.Node<number>
+  scrollValue: Animated.Value
   containerWidth: number
   backgroundColor?: string
   activeTextColor?: string
