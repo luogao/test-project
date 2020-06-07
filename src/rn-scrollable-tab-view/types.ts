@@ -8,11 +8,17 @@ export enum TabBarPosition {
   overlayBottom = 'overlayBottom',
 }
 
+type OnChangeArg = {
+  i: number,
+  ref: ReactNode,
+  from: number,
+}
+
 export interface Props {
   tabBarPosition: TabBarPosition
   initialPage?: number
   page?: number
-  onChangeTab?: ({ }: any) => void
+  onChangeTab?: (arg: OnChangeArg) => void
   onScroll?: (value: number) => void
   renderTabBar?: (props: any) => ReactElement
   tabBarUnderlineStyle?: StyleProp<ViewStyle>
@@ -30,14 +36,12 @@ export interface Props {
 }
 
 export type State = {
-  sceneKeys: string[]
   currentPage: number
-  containerWidth: number
 }
 
 export type TabBarProps = {
   goToPage: (page: number) => void
-  tabs: any
+  tabs: string[]
   activeTab: number
   scrollValue: Animated.Value
   containerWidth: number

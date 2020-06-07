@@ -12,7 +12,10 @@ import { timing } from 'react-native-redash'
 import Wallet from './src/Wallet'
 import Swiper from './src/Swiper'
 import TabViewExample from './src/TabView'
-
+import ScrollableTabView from './src/rn-scrollable-tab-view'
+import { TabBarPosition } from './src/rn-scrollable-tab-view/types'
+import { assets } from './src/Swiper/index copy'
+import { width, height } from './src/constants'
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
   'https://i.pinimg.com/564x/fa/e9/5a/fae95aeedf1965085ac1ddfc5a8275cc.jpg',
@@ -22,14 +25,16 @@ const images = [
   'https://i.pinimg.com/564x/af/51/f5/af51f503419b63dd21cff6d392aa584e.jpg',
 ]
 
-export default function App () {
+export default function App() {
   const testImg1 =
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356921&di=bc5c9d7ce4914560833910f2d138353f&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fd62a6059252dd42a1c362a29033b5bb5c9eab870.jpg'
   const testImg2 =
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356919&di=55acd8a776a2d38b8a610b693a6af639&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F20%2F62%2F01000000000000119086280352820.jpg'
 
-  const [ image, setImage ] = useState(testImg1)
-
+  const [image, setImage] = useState(testImg1)
+  const handleChangeTab = ({ i }) => {
+    console.log(i)
+  }
   const handlePress = (item) => {
     console.log('handlePress')
     setImage(item)
@@ -39,7 +44,7 @@ export default function App () {
   const process = timing({ duration: 1000 })
   // return <TabViewExample />
   return (
-    <View style={ [ styles.container ] }>
+    <View style={[styles.container]}>
       {/* <CircularProgressBar
         backgroundColor='#000'
         Radius={100}
@@ -49,9 +54,30 @@ export default function App () {
         trackColor="orange"
       /> */}
 
-      {/* <Wallet /> */ }
-      <Swiper />
+      {/* <Wallet /> */}
+      {/* <Swiper /> */}
 
+      <ScrollableTabView
+        prerenderingSiblingsNumber={1} // 预渲染所有子tab
+        initialPage={0}
+        onChangeTab={handleChangeTab}
+        tabBarPosition={TabBarPosition.overlayTop}
+        contentProps={{ bounces: true }}
+      >
+        {assets.map((source, i) => (
+          <View key={source} style={styles.picture} tabLabel={i}>
+            <Image
+              resizeMethod='resize'
+              source={source}
+              style={{
+                width: '100%',
+                height: '100%',
+                resizeMode: 'cover',
+              }}
+            />
+          </View>
+        ))}
+      </ScrollableTabView>
     </View>
   )
 }
@@ -65,5 +91,12 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#000',
+  },
+  picture: {
+    width,
+    flex: 1,
+    overflow: 'hidden',
+    borderColor: 'red',
+    borderWidth: 1,
   },
 })
