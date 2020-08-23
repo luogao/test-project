@@ -4,7 +4,6 @@ import { View } from 'react-native'
 class TestChildren extends Component {
   componentDidMount() {
     console.log('mount')
-    
   }
 
   componentWillUnmount() {
@@ -12,13 +11,15 @@ class TestChildren extends Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <View
         style={{
           width: 100,
           height: 100,
           backgroundColor: 'pink',
-          borderWidth:1 
+          borderWidth: 1,
+          position: 'absolute',
         }}
       ></View>
     )

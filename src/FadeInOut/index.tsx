@@ -11,8 +11,15 @@ type State = {
   renderChildren: boolean
 }
 
+enum AnimationState {
+  inactive = 0,
+  showing,
+  hiding,
+}
+
 class index extends Component<Props, State> {
   private opacityValue: Animated.Value
+  private animationState: AnimationState = AnimationState.inactive
 
   constructor(props: Props) {
     super(props)
@@ -20,16 +27,32 @@ class index extends Component<Props, State> {
     this.state = {
       renderChildren: this.props.unmountChildrenWhenInvisible ? this.props.visible : true,
     }
+    this.opacityValue.addListener((value) => {
+      console.log(value)
+    })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { visible } = this.props
-
-    if (!prevProps.visible && visible) {
-      this.show(this.props)
-    }
-    if (prevProps.visible && !visible) {
-      this.hide(this.props)
+    if (visible !== prevProps.visible) {
+      if (!prevProps.visible && visible) {
+        if (this.animationState === AnimationState.inactive) {
+          this.show(this.props)
+        } else if (this.animationState === AnimationState.hiding) {
+          this.opacityValue.stopAnimation(() => {
+            this.show(this.props)
+          })
+        }
+      }
+      if (prevProps.visible && !visible) {
+        if (this.animationState === AnimationState.inactive) {
+          this.hide(this.props)
+        } else if (this.animationState === AnimationState.showing) {
+          this.opacityValue.stopAnimation(() => {
+            this.hide(this.props)
+          })
+        }
+      }
     }
   }
 
@@ -39,19 +62,26 @@ class index extends Component<Props, State> {
         renderChildren: true,
       },
       () => {
+        this.animationState = AnimationState.showing
         Animated.timing(this.opacityValue, {
           toValue: 1,
           duration: 500,
+          useNativeDriver: true,
+        }).start(() => {
+          this.animationState = AnimationState.inactive
         })
       }
     )
   }
 
   hide = (props) => {
+    this.animationState = AnimationState.hiding
     Animated.timing(this.opacityValue, {
       toValue: 0,
       duration: 500,
+      useNativeDriver: true,
     }).start(() => {
+      this.animationState = AnimationState.inactive
       if (this.props.unmountChildrenWhenInvisible && this.state.renderChildren) {
         this.setState({
           renderChildren: false,
@@ -62,12 +92,12 @@ class index extends Component<Props, State> {
 
   renderContent = () => {
     if (!this.state.renderChildren) return null
-    return this.props.children
+    return React.cloneElement(React.Children.only(this.props.children) as React.ReactElement<any>, {
+      fadeInOutAnimationValue: this.opacityValue,
+    })
   }
 
   render() {
-    console.log(this.state)
-
     return (
       <Animated.View style={{ opacity: this.opacityValue }}>{this.renderContent()}</Animated.View>
     )
