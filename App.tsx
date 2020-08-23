@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, Image, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, Image, SafeAreaView, Button } from 'react-native'
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler'
 import BetterImage from './src/BetterImage'
 import SmallImage from './src/SmallImage'
@@ -16,6 +16,8 @@ import ScrollableTabView from './src/rn-scrollable-tab-view'
 import { TabBarPosition } from './src/rn-scrollable-tab-view/types'
 import { assets } from './src/Swiper/index copy'
 import { width, height } from './src/constants'
+import FadeInOut from './src/FadeInOut'
+import TestChildren from './src/FadeInOut/TestChildren'
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
   'https://i.pinimg.com/564x/fa/e9/5a/fae95aeedf1965085ac1ddfc5a8275cc.jpg',
@@ -32,6 +34,8 @@ export default function App() {
     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356919&di=55acd8a776a2d38b8a610b693a6af639&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F20%2F62%2F01000000000000119086280352820.jpg'
 
   const [image, setImage] = useState(testImg1)
+
+  const [fadeInOutVisible, setFadeInOutVisible] = useState(false)
   const handleChangeTab = ({ i }) => {
     console.log(i)
   }
@@ -42,6 +46,11 @@ export default function App() {
   // return <PressBox />
 
   const process = timing({ duration: 1000 })
+
+  const handleToggle = () => {
+    setFadeInOutVisible(!fadeInOutVisible)
+  }
+
   // return <TabViewExample />
   return (
     <View style={[styles.container]}>
@@ -57,7 +66,7 @@ export default function App() {
       {/* <Wallet /> */}
       {/* <Swiper /> */}
 
-      <ScrollableTabView
+      {/* <ScrollableTabView
         prerenderingSiblingsNumber={1} // 预渲染所有子tab
         initialPage={0}
         onChangeTab={handleChangeTab}
@@ -77,7 +86,15 @@ export default function App() {
             />
           </View>
         ))}
-      </ScrollableTabView>
+      </ScrollableTabView> */}
+
+      <FadeInOut visible={fadeInOutVisible} unmountChildrenWhenInvisible>
+        <TestChildren />
+      </FadeInOut>
+
+      <Text style={{ color: '#000' }}>{fadeInOutVisible + ''}</Text>
+
+      <Button title='TOGGLE' onPress={handleToggle}></Button>
     </View>
   )
 }
