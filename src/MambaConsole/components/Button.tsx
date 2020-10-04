@@ -18,10 +18,10 @@ interface Props extends TouchableOpacityProps {
 }
 
 export default function Button(props: Props) {
-  const { onPress, label, labelStyle, buttonStyle } = props
+  const { onPress, label, labelStyle, buttonStyle, ...rest } = props
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, buttonStyle]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, buttonStyle]} {...rest}>
       <Text style={[styles.label, labelStyle]}>{label}</Text>
     </TouchableOpacity>
   )

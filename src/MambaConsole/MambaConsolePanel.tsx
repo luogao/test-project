@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, Text } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import Tab from './components/Tab'
 import Log from './components/Log'
 import { LogDetailType, LogItemType, LogType } from './types/log'
-
-const Height = Dimensions.get('window').height
+import Button from './components/Button'
 
 enum TabName {
   Log = 'Log',
@@ -25,35 +24,28 @@ class MambaConsolePanel extends Component<Props, State> {
     this.state = {
       logArr: [],
       activeTab: TabName.Log,
-      logs: [
-        {
-          type: LogType.Log,
-          data: 'log',
-          date: '',
-        },
-        {
-          type: LogType.Wran,
-          data: 'wran',
-          date: '',
-        },
-        {
-          type: LogType.Debug,
-          data: 'debug',
-          date: '',
-        },
-        {
-          type: LogType.Info,
-          data: 'info',
-          date: '',
-        },
-      ],
+      logs: [],
     }
+    console.log('123')
+    console.log('123')
+    console.log('123')
+    console.log('123')
     console.log('123')
     console.info({ 123: 123 })
     console.warn('ahahah')
+    console.log([1, 2, 3, 4, 5, 56])
+    console.log(1, 2, 3, 4, 5)
+    console.log([1, 2, 3, 4, { a: 1 }, [1234, 123, 2342, 1233, 22]])
+    console.log({ a: 1 })
+    console.log(null)
+    console.log(undefined)
+    console.log(this.handleTabChange)
+    console.log(new Map())
+    console.log(new Set())
   }
 
   componentWillUnmount() {
+    //@ts-ignore
     global.consolePanelStack.removeListener(this.handleLogUpdate)
   }
 
@@ -68,17 +60,21 @@ class MambaConsolePanel extends Component<Props, State> {
     //@ts-ignore
     arr = global.consolePanelStack.getLogArr()
     output = arr.map((item, index) => {
+      console.info('item.data', item.data)
       const r = item.data.map((data, key) => {
         return this.formatToString(data)
       })
+      console.info({ r })
+      console.info({ r: r.join(' ') })
       return { type: item.method, data: r.join(' '), date: item.date }
     })
     this.setState({
-      logs: arr,
+      logs: output,
     })
   }
 
   formatToString = (obj) => {
+    console.info({ obj })
     //将各种结构的log转为String
     if (
       obj === null ||
@@ -88,15 +84,19 @@ class MambaConsolePanel extends Component<Props, State> {
       typeof obj === 'boolean' ||
       typeof obj === 'function'
     ) {
-      return '"' + String(obj) + '"'
+      return ` ${String(obj)}`
     } else if (obj instanceof Date) {
-      return 'Date(' + obj.toISOString() + ')'
+      return ` Date(${obj.toISOString()})`
     } else if (Array.isArray(obj)) {
-      return 'Array(' + obj.length + ')[' + obj.map((elem) => this.formatToString(elem)) + ']'
+      console.info(
+        'obj.map((elem) => this.formatToString(elem))',
+        obj.map((elem) => this.formatToString(elem))
+      )
+      return ` Array(${obj.length}) [${obj.map((elem) => this.formatToString(elem))}]`
     } else if (obj.toString) {
       // return 'object{' + obj.toString() + '}';
-      //此处有问题，对象调用toString()返回为"[object Object]"
-      return 'object(' + JSON.stringify(obj) + ')'
+      // 此处有问题，对象调用toString()返回为"[object Object]"
+      return ` Object ${JSON.stringify(obj)}`
     } else {
       return 'unknown data'
     }
@@ -127,12 +127,26 @@ class MambaConsolePanel extends Component<Props, State> {
     })
   }
 
+  handleHide = () => {
+    console.log('hide')
+  }
+
+  handleClear = () => {
+    console.log('clear')
+    // @ts-ignore
+    global.consolePanelStack.clear()
+  }
+
   render() {
     return (
       <>
         <View style={styles.overlay} />
-        <View style={styles.wrapper}>
+        <View style={styles.panelWrapper}>
           <Tab tabs={this.tabs} activeTab={this.state.activeTab} onChange={this.handleTabChange} />
+          <View style={styles.actionButtonGroup}>
+            <Button label='clear' onPress={this.handleClear} style={styles.actionButton} />
+            <Button label='hide' onPress={this.handleHide} style={styles.actionButton} />
+          </View>
         </View>
       </>
     )
@@ -140,118 +154,33 @@ class MambaConsolePanel extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  container: {},
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.3)',
     ...StyleSheet.absoluteFillObject,
   },
-  wrapper: {
+  panelWrapper: {
     width: '100%',
-    height: Height * 0.7,
+    height: '70%',
     backgroundColor: '#fff',
     position: 'absolute',
     bottom: 0,
     left: 0,
   },
+  actionButtonGroup: {
+    height: 35,
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: '#eff0f4',
+  },
+  actionButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    backgroundColor: '#eff0f4',
+    borderColor: '#dedfe0',
+  },
 })
-
-let _setUpGlobal = function (global) {
-  ;(function (global) {
-    class ConsoleStack {
-      logData = []
-      waiting = false
-      listeners = []
-      timeout = null
-
-      constructor() {
-        this.logData = []
-        this.waiting = false
-        this.listeners = []
-      }
-
-      addLogToArr(method, data) {
-        //log数量增加
-        this.logData.unshift({ method: method, data: data, date: timestamp() })
-        this.notifyListeners()
-      }
-
-      notifyListeners() {
-        //若this.logData有变化，则通知监听器
-        if (this.waiting) {
-          return
-        }
-        this.timeout = setTimeout(() => {
-          this.listeners.forEach((callback) => {
-            callback()
-            clearTimeout(this.timeout)
-            this.waiting = false
-          })
-        }, 500)
-        this.waiting = true
-      }
-
-      clearLogArr() {
-        //清空log
-        this.logData.splice(0, this.logData.length)
-        this.notifyListeners()
-      }
-
-      bindUpdateListener(callback) {
-        this.listeners.push(callback) //变化执行函数
-      }
-
-      removeListener(listener) {
-        this.listeners = this.listeners.filter((l) => l !== listener)
-      }
-
-      getLogArr() {
-        return this.logData
-      }
-    }
-
-    function formatter(len) {
-      return (input) => {
-        var str = String(input)
-        var strLen = str.length
-        return '0'.repeat(len - strLen) + input
-      }
-    }
-
-    function timestamp() {
-      var d = new Date()
-      let f2 = formatter(2)
-      return (
-        f2(d.getHours()) +
-        ':' +
-        f2(d.getMinutes()) +
-        ':' +
-        f2(d.getSeconds()) +
-        '.' +
-        formatter(3)(d.getMilliseconds())
-      )
-    }
-
-    function proxyConsole(console, ConsoleStack) {
-      let methods = ['log', 'warn', 'debug', 'info']
-      methods.forEach((method) => {
-        var f = console[method]
-        console['_' + method] = f
-        console[method] = function () {
-          const log = Array.prototype.slice.call(arguments) //将argument转为数组
-          ConsoleStack.addLogToArr(method, log)
-          f.apply(console, arguments) //打印出来
-        }
-      })
-    }
-
-    if (!global.consolePanelStack) {
-      let consolePanelStack = new ConsoleStack()
-      global.consolePanelStack = consolePanelStack
-      proxyConsole(global.console, consolePanelStack)
-    }
-  })(global)
-}
-
-//@ts-ignore
-_setUpGlobal(global)
 
 export default MambaConsolePanel

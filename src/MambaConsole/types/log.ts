@@ -1,8 +1,9 @@
 export enum LogType {
-  Log = 'Log',
-  Debug = 'Debug',
-  Info = 'Info',
-  Wran = 'Wran'
+  Log = 'log',
+  Debug = 'debug',
+  Info = 'info',
+  Warn = 'warn',
+  Clear = 'clear'
 }
 
 export enum LogDetailType {

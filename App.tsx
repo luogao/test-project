@@ -18,7 +18,10 @@ import { assets } from './src/Swiper/index copy'
 import { width, height } from './src/constants'
 import FadeInOut from './src/FadeInOut'
 import TestChildren from './src/FadeInOut/TestChildren'
-import MambaConsolePanel from './src/MambaConsole/MambaConsolePanel'
+import MambaConsole from './src/MambaConsole'
+
+MambaConsole.setup()
+
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
   'https://i.pinimg.com/564x/fa/e9/5a/fae95aeedf1965085ac1ddfc5a8275cc.jpg',
@@ -97,7 +100,7 @@ export default function App() {
 
       <Button title='TOGGLE' onPress={handleToggle}></Button> */}
 
-      <MambaConsolePanel />
+      <MambaConsole.Panel />
     </View>
   )
 }

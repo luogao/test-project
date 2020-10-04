@@ -1,20 +1,43 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ScrollView, StyleProp, ViewStyle } from 'react-native'
-import { LogItemType } from '../../types/log'
+import { ScrollView } from 'react-native'
+import { LogItemType, LogType } from '../../types/log'
 import Item from './Item'
 
 type Props = {
   logs: LogItemType[]
 }
 
-class index extends Component<Props> {
+type State = {}
+
+class index extends Component<Props, State> {
+  scrollViewRef = React.createRef<ScrollView>()
+
+  constructor(props: Props) {
+    super(props)
+  }
+
   renderItem = (item: LogItemType, index: number) => {
-    console.log(item)
     return <Item {...item} key={index} />
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.logs !== this.props.logs) {
+      this.scrollToTop()
+    }
+  }
+
+  scrollToTop = () => {
+    if (this.scrollViewRef.current) {
+      this.scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false })
+    }
+  }
+
   render() {
-    return <ScrollView>{this.props.logs.map(this.renderItem)}</ScrollView>
+    return (
+      <ScrollView ref={this.scrollViewRef} style={{ flex: 1 }} overScrollMode='never'>
+        {this.props.logs.map(this.renderItem)}
+      </ScrollView>
+    )
   }
 }
 

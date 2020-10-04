@@ -27,7 +27,10 @@ class index extends Component<Props> {
 
     return (
       <Button
-        buttonStyle={ this.props.activeTab === tab.label ? styles.tabbarItemActive : styles.tabbarItem}
+        activeOpacity={1}
+        buttonStyle={
+          this.props.activeTab === tab.label ? styles.tabbarItemActive : styles.tabbarItem
+        }
         label={tab.label}
         key={tab.label}
         onPress={onItemPress}
@@ -37,7 +40,7 @@ class index extends Component<Props> {
 
   renderTabItemContent = () => {
     const tab = this.props.tabs.find((_tab) => _tab.label === this.props.activeTab)
-    return tab ? <View key={tab.label}>{tab.render()}</View> : null
+    return tab ? tab.render() : null
   }
 
   render() {
@@ -56,12 +59,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
     flexDirection: 'row',
-    backgroundColor: '#eff0f4'
+    backgroundColor: '#eff0f4',
   },
   tabbarItem: {
     backgroundColor: '#eff0f4',
-    paddingHorizontal: 20,
     borderColor: '#dedfe0',
+    paddingHorizontal: 20,
     borderRightWidth: 1,
   },
   tabbarItemActive: {
@@ -70,7 +73,9 @@ const styles = StyleSheet.create({
     borderColor: '#dedfe0',
     borderRightWidth: 1,
   },
-  tabContent: {},
+  tabContent: {
+    flex: 1,
+  },
 })
 
 export default index

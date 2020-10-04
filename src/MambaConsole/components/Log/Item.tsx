@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, ScrollView, StyleProp, ViewStyle } from 'react-native'
 import { LogDetail, LogItemType, LogType } from '../../types/log'
+import { capitalized } from '../../utils'
 
 type Props = LogItemType
 
@@ -15,14 +16,12 @@ class Item extends Component<Props> {
 
   renderLogDetail = () => {
     const { data } = this.props
-    console.log(data)
     return data
   }
 
   render() {
-    const typedWrapperStyle = styles[`itemWrapper${this.props.type}`]
-    const typedLabelStyle = styles[`itemLabel${this.props.type}`]
-
+    const typedWrapperStyle = styles[`itemWrapper${capitalized(this.props.type)}`]
+    const typedLabelStyle = styles[`itemLabel${capitalized(this.props.type)}`]
     return (
       <View style={[styles.itemWrapperCommon, typedWrapperStyle]}>
         <Text style={[styles.itemLabelCommon, typedLabelStyle]}>{this.renderLogDetail()}</Text>
@@ -44,22 +43,24 @@ const styles = StyleSheet.create({
   },
   itemWrapperLog: {},
   itemWrapperInfo: {},
-  itemWrapperDebug: {
-  },
-  itemWrapperWran: {
+  itemWrapperDebug: {},
+  itemWrapperWarn: {
     backgroundColor: '#FFFACD',
-    borderColor:'#FFB930'
+    borderColor: '#FFB930',
   },
-  itemLabelLog: {
-    
+  itemLabelLog: {},
+  itemLabelClear: {
+    fontSize: 12,
+    color: '#868686',
+    fontStyle: 'italic',
   },
   itemLabelInfo: {
-    color: '#6A5ACD'
+    color: '#6A5ACD',
   },
   itemLabelDebug: {
     color: '#DAA520',
   },
-  itemLabelWran: {
+  itemLabelWarn: {
     color: '#FFA500',
   },
 })
