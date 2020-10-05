@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native'
 import Tab from './components/Tab'
 import Log from './components/Log'
 import { LogDetailType, LogItemType, LogType } from './types/log'
 import Button from './components/Button'
+import { useBackHandler } from './hooks/useBackHandler'
 
 enum TabName {
   Log = 'Log',
   System = 'System',
+  MambaBundle = 'Mamba Bundle'
 }
 
 type State = {
@@ -16,7 +18,10 @@ type State = {
   logArr: []
 }
 
-type Props = {}
+type Props = {
+  visible: boolean
+  onClose: () => void
+}
 
 class MambaConsolePanel extends Component<Props, State> {
   constructor(props: Props) {
@@ -52,6 +57,15 @@ class MambaConsolePanel extends Component<Props, State> {
   componentDidMount() {
     //@ts-ignore
     global.consolePanelStack.bindUpdateListener(this.handleLogUpdate)
+
+    // useBackHandler(() => {
+    //   if (this.props.visible) {
+    //     this.handleHide()
+    //     return true
+    //   } else {
+    //     return false
+    //   }
+    // })
   }
 
   handleLogUpdate = () => {
@@ -110,6 +124,10 @@ class MambaConsolePanel extends Component<Props, State> {
     return <Text> system </Text>
   }
 
+  renderMambaBundleTab = () => {
+    return <Text> bundle info </Text>
+  }
+
   tabs = [
     {
       label: TabName.Log,
@@ -118,6 +136,10 @@ class MambaConsolePanel extends Component<Props, State> {
     {
       label: TabName.System,
       render: this.renderSystemTab,
+    },
+    {
+      label: TabName.MambaBundle,
+      render: this.renderMambaBundleTab,
     },
   ]
 
@@ -128,7 +150,7 @@ class MambaConsolePanel extends Component<Props, State> {
   }
 
   handleHide = () => {
-    console.log('hide')
+    this.props.onClose()
   }
 
   handleClear = () => {
@@ -138,9 +160,10 @@ class MambaConsolePanel extends Component<Props, State> {
   }
 
   render() {
+    if (!this.props.visible) return null
     return (
       <>
-        <View style={styles.overlay} />
+        <TouchableOpacity onPress={this.handleHide} style={styles.overlay} activeOpacity={1} />
         <View style={styles.panelWrapper}>
           <Tab tabs={this.tabs} activeTab={this.state.activeTab} onChange={this.handleTabChange} />
           <View style={styles.actionButtonGroup}>

@@ -28,9 +28,7 @@ class index extends Component<Props> {
     return (
       <Button
         activeOpacity={1}
-        buttonStyle={
-          this.props.activeTab === tab.label ? styles.tabbarItemActive : styles.tabbarItem
-        }
+        style={this.props.activeTab === tab.label ? styles.tabbarItemActive : styles.tabbarItem}
         label={tab.label}
         key={tab.label}
         onPress={onItemPress}

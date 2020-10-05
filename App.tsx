@@ -100,7 +100,7 @@ export default function App() {
 
       <Button title='TOGGLE' onPress={handleToggle}></Button> */}
 
-      <MambaConsole.Panel />
+      <MambaConsole />
     </View>
   )
 }

@@ -14,14 +14,13 @@ interface Props extends TouchableOpacityProps {
   onPress: (event: GestureResponderEvent) => void
   label: string
   labelStyle?: StyleProp<TextStyle>
-  buttonStyle?: StyleProp<ViewStyle>
 }
 
 export default function Button(props: Props) {
-  const { onPress, label, labelStyle, buttonStyle, ...rest } = props
+  const { onPress, label, labelStyle, style, ...rest } = props
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, buttonStyle]} {...rest}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, style]} {...rest}>
       <Text style={[styles.label, labelStyle]}>{label}</Text>
     </TouchableOpacity>
   )
