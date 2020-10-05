@@ -19,6 +19,7 @@ import { width, height } from './src/constants'
 import FadeInOut from './src/FadeInOut'
 import TestChildren from './src/FadeInOut/TestChildren'
 import MambaConsole from './src/MambaConsole'
+import Movable from './src/Movable'
 
 MambaConsole.setup()
 
@@ -99,7 +100,6 @@ export default function App() {
       <Text style={{ color: '#000' }}>{fadeInOutVisible + ''}</Text>
 
       <Button title='TOGGLE' onPress={handleToggle}></Button> */}
-
       <MambaConsole />
     </View>
   )

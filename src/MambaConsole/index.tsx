@@ -3,6 +3,7 @@ import Panel from './MambaConsolePanel'
 import Setup from './core/setup'
 import Button from './components/Button'
 import { BackHandler, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import Movable from '../Movable'
 
 type Props = {}
 
@@ -53,14 +54,20 @@ export default class MambaConsole extends Component<Props, State> {
     return (
       <>
         {!this.state.panelVisible && (
-          <TouchableOpacity activeOpacity={1} style={styles.mButton} onPress={this.handleOpenPanel}>
-            <Image
-              source={require('./images/icon_button.png')}
-              resizeMode='contain'
-              resizeMethod='resize'
-              style={styles.mButtonIcon}
-            />
-          </TouchableOpacity>
+          <Movable>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.mButton}
+              onPress={this.handleOpenPanel}
+            >
+              <Image
+                source={require('./images/icon_button.png')}
+                resizeMode='contain'
+                resizeMethod='resize'
+                style={styles.mButtonIcon}
+              />
+            </TouchableOpacity>
+          </Movable>
         )}
 
         <Panel visible={this.state.panelVisible} onClose={this.handlePanelClose} />
@@ -85,6 +92,6 @@ const styles = StyleSheet.create({
   mButtonIcon: {
     width: ButtonIconSize,
     height: ButtonIconSize,
-    position:'absolute'
+    position: 'absolute',
   },
 })

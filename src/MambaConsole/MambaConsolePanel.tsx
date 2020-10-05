@@ -106,7 +106,7 @@ class MambaConsolePanel extends Component<Props, State> {
         'obj.map((elem) => this.formatToString(elem))',
         obj.map((elem) => this.formatToString(elem))
       )
-      return ` Array(${obj.length}) [${obj.map((elem) => this.formatToString(elem))}]`
+      return ` Array(${obj.length}) [${obj.map((elem) => this.formatToString(elem))} ]`
     } else if (obj.toString) {
       // return 'object{' + obj.toString() + '}';
       // 此处有问题，对象调用toString()返回为"[object Object]"
@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
     left: 0,
   },
   actionButtonGroup: {
-    height: 35,
     flexDirection: 'row',
     width: '100%',
     backgroundColor: '#eff0f4',
@@ -203,6 +202,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#eff0f4',
     borderColor: '#dedfe0',
+    paddingBottom: 30,
   },
 })
 
