@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Panel from './MambaConsolePanel'
 import Setup from './core/setup'
 import Button from './components/Button'
-import { BackHandler, StyleSheet } from 'react-native'
+import { BackHandler, Image, StyleSheet, TouchableOpacity } from 'react-native'
 
 type Props = {}
 
@@ -23,7 +23,7 @@ export default class MambaConsole extends Component<Props, State> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBack)
   }
-  
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
@@ -52,13 +52,16 @@ export default class MambaConsole extends Component<Props, State> {
   render() {
     return (
       <>
-        <Button
-          activeOpacity={1}
-          style={styles.mButton}
-          labelStyle={styles.mButtonLabel}
-          onPress={this.handleOpenPanel}
-          label='mConsole'
-        />
+        {!this.state.panelVisible && (
+          <TouchableOpacity activeOpacity={1} style={styles.mButton} onPress={this.handleOpenPanel}>
+            <Image
+              source={require('./images/icon_button.png')}
+              resizeMode='contain'
+              resizeMethod='resize'
+              style={styles.mButtonIcon}
+            />
+          </TouchableOpacity>
+        )}
 
         <Panel visible={this.state.panelVisible} onClose={this.handlePanelClose} />
       </>
@@ -66,11 +69,22 @@ export default class MambaConsole extends Component<Props, State> {
   }
 }
 
+const ButtonSize = 58
+const ButtonIconSize = 68
+
 const styles = StyleSheet.create({
   mButton: {
-    backgroundColor: '#c62a88',
+    backgroundColor: '#f9b81e',
+    width: ButtonSize,
+    height: ButtonSize,
+    borderRadius: ButtonSize / 2,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  mButtonLabel: {
-    color: '#150485',
+  mButtonIcon: {
+    width: ButtonIconSize,
+    height: ButtonIconSize,
+    position:'absolute'
   },
 })
