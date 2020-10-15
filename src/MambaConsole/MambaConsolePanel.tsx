@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import Tab from './components/Tab'
 import Log from './components/Log'
 import { LogDetailType, LogItemType, LogType } from './types/log'
 import Button from './components/Button'
-import { useBackHandler } from './hooks/useBackHandler'
 
 enum TabName {
   Log = 'Log',
