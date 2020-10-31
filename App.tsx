@@ -20,8 +20,9 @@ import FadeInOut from './src/FadeInOut'
 import TestChildren from './src/FadeInOut/TestChildren'
 import MambaConsole from './src/MambaConsole'
 import Movable from './src/Movable'
+import FancyImage from './src/FancyImage'
 
-MambaConsole.setup()
+// MambaConsole.setup()
 
 const images = [
   'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
@@ -100,7 +101,8 @@ export default function App() {
       <Text style={{ color: '#000' }}>{fadeInOutVisible + ''}</Text>
 
       <Button title='TOGGLE' onPress={handleToggle}></Button> */}
-      <MambaConsole />
+      {/* <MambaConsole /> */}
+      <FancyImage />
     </View>
   )
 }
