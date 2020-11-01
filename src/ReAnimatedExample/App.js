@@ -1,28 +1,29 @@
+import { createBrowserApp } from '@react-navigation/web'
 import React from 'react'
 import { FlatList, Platform, StyleSheet, Text, View, YellowBox } from 'react-native'
 import { RectButton, ScrollView } from 'react-native-gesture-handler'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 
-import ChatHeads from './src/ReAnimatedExample/chatHeads'
-import Code from './src/ReAnimatedExample/code'
-import Colors from './src/ReAnimatedExample/colors'
-import DifferentSpringConfigs from './src/ReAnimatedExample/differentSpringConfigs'
-import ImageViewer from './src/ReAnimatedExample/imageViewer'
-import Imperative from './src/ReAnimatedExample/imperative'
-import InteractablePlayground, { SCREENS as INTERACTABLE_SCREENS } from './src/ReAnimatedExample/interactablePlayground'
-import PanRotateAndZoom from './src/ReAnimatedExample/PanRotateAndZoom'
-import ProgressBar from './src/ReAnimatedExample/progressBar'
-import Rotations from './src/ReAnimatedExample/rotations'
-import Snappable from './src/ReAnimatedExample/snappable'
-import Interpolate from './src/ReAnimatedExample/src/interpolate'
-import StartAPI from './src/ReAnimatedExample/startAPI'
-import Test from './src/ReAnimatedExample/test'
-import TransitionsProgress from './src/ReAnimatedExample/transitions/progress'
-import TransitionsSequence from './src/ReAnimatedExample/transitions/sequence'
-import TransitionsShuffle from './src/ReAnimatedExample/transitions/shuffle'
-import TransitionsTicket from './src/ReAnimatedExample/transitions/ticket'
-import WidthAndHeight from './src/ReAnimatedExample/widthAndHeight'
+import ChatHeads from './chatHeads'
+import Code from './code'
+import Colors from './colors'
+import DifferentSpringConfigs from './differentSpringConfigs'
+import ImageViewer from './imageViewer'
+import Imperative from './imperative'
+import InteractablePlayground, { SCREENS as INTERACTABLE_SCREENS } from './interactablePlayground'
+import PanRotateAndZoom from './PanRotateAndZoom'
+import ProgressBar from './progressBar'
+import Rotations from './rotations'
+import Snappable from './snappable'
+import Interpolate from './src/interpolate'
+import StartAPI from './startAPI'
+import Test from './test'
+import TransitionsProgress from './transitions/progress'
+import TransitionsSequence from './transitions/sequence'
+import TransitionsShuffle from './transitions/shuffle'
+import TransitionsTicket from './transitions/ticket'
+import WidthAndHeight from './widthAndHeight'
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
 // refers to bug in React Navigation which should be fixed soon
@@ -146,6 +147,7 @@ const styles = StyleSheet.create({
 })
 
 const createApp = Platform.select({
+  web: (input) => createBrowserApp(input, { history: 'hash' }),
   default: (input) => createAppContainer(input),
 })
 
