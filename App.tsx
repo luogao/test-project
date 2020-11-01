@@ -1,152 +1,130 @@
-import React from 'react'
-import { FlatList, Platform, StyleSheet, Text, View, YellowBox } from 'react-native'
-import { RectButton, ScrollView } from 'react-native-gesture-handler'
-import { createAppContainer } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Image, SafeAreaView, Button } from 'react-native'
+import { TouchableOpacity, FlatList } from 'react-native-gesture-handler'
+import BetterImage from './src/BetterImage'
+import SmallImage from './src/SmallImage'
+const DEFAULT_IMAGE_URL = 'https://placeimg.com/640/640/any'
+import FacebookExample from './src/FacebookExample'
+import DoubleTap from './src/DoubleTap'
+import CircularProgressBar from './src/CircularProgressBar'
+import Animated from 'react-native-reanimated'
+import { timing } from 'react-native-redash'
+import Wallet from './src/Wallet'
+import Swiper from './src/Swiper'
+import TabViewExample from './src/TabView'
+import ScrollableTabView from './src/rn-scrollable-tab-view'
+import { TabBarPosition } from './src/rn-scrollable-tab-view/types'
+import { assets } from './src/Swiper/index copy'
+import { width, height } from './src/constants'
+import FadeInOut from './src/FadeInOut'
+import TestChildren from './src/FadeInOut/TestChildren'
+import MambaConsole from './src/MambaConsole'
+import Movable from './src/Movable'
+import FancyImage from './src/FancyImage'
+import DemoTiming from './src/Demo/Timing'
 
-import ChatHeads from './src/ReAnimatedExample/chatHeads'
-import Code from './src/ReAnimatedExample/code'
-import Colors from './src/ReAnimatedExample/colors'
-import DifferentSpringConfigs from './src/ReAnimatedExample/differentSpringConfigs'
-import ImageViewer from './src/ReAnimatedExample/imageViewer'
-import Imperative from './src/ReAnimatedExample/imperative'
-import InteractablePlayground, { SCREENS as INTERACTABLE_SCREENS } from './src/ReAnimatedExample/interactablePlayground'
-import PanRotateAndZoom from './src/ReAnimatedExample/PanRotateAndZoom'
-import ProgressBar from './src/ReAnimatedExample/progressBar'
-import Rotations from './src/ReAnimatedExample/rotations'
-import Snappable from './src/ReAnimatedExample/snappable'
-import Interpolate from './src/ReAnimatedExample/src/interpolate'
-import StartAPI from './src/ReAnimatedExample/startAPI'
-import Test from './src/ReAnimatedExample/test'
-import TransitionsProgress from './src/ReAnimatedExample/transitions/progress'
-import TransitionsSequence from './src/ReAnimatedExample/transitions/sequence'
-import TransitionsShuffle from './src/ReAnimatedExample/transitions/shuffle'
-import TransitionsTicket from './src/ReAnimatedExample/transitions/ticket'
-import WidthAndHeight from './src/ReAnimatedExample/widthAndHeight'
+// MambaConsole.setup()
 
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader'])
-// refers to bug in React Navigation which should be fixed soon
-// https://github.com/react-navigation/react-navigation/issues/3956
+const images = [
+  'https://i.pinimg.com/564x/29/20/0e/29200e4feaeadcbd6c9fdda3d2cb7fb7.jpg',
+  'https://i.pinimg.com/564x/fa/e9/5a/fae95aeedf1965085ac1ddfc5a8275cc.jpg',
+  'https://i.pinimg.com/564x/19/28/2d/19282d8b940b3b1a79f86bfbbc861e33.jpg',
+  'https://i.pinimg.com/564x/c6/87/a2/c687a234c4f968c2b7cb394f2a079ec5.jpg',
+  'https://i.pinimg.com/564x/d4/b4/49/d4b449a31cc8a77a35c7ecf968667100.jpg',
+  'https://i.pinimg.com/564x/af/51/f5/af51f503419b63dd21cff6d392aa584e.jpg',
+]
 
-const SCREENS = {
-  Snappable: { screen: Snappable, title: 'Snappable' },
-  Test: { screen: Test, title: 'Test' },
-  ImageViewer: { screen: ImageViewer, title: 'Image Viewer' },
-  Interactable: { screen: InteractablePlayground, title: 'Interactable' },
-  Interpolate: { screen: Interpolate, title: 'Interpolate' },
-  Colors: { screen: Colors, title: 'Colors' },
-  StartAPI: { screen: StartAPI, title: 'Start API' },
-  chatHeads: { screen: ChatHeads, title: 'Chat heads (iOS only)' },
-  code: { screen: Code, title: 'Animated.Code component' },
-  width: { screen: WidthAndHeight, title: 'width & height & more' },
-  rotations: { screen: Rotations, title: 'rotations (concat node)' },
-  imperative: {
-    screen: Imperative,
-    title: 'imperative (set value / toggle visibility)',
-  },
-  panRotateAndZoom: {
-    screen: PanRotateAndZoom,
-    title: 'Pan, rotate and zoom (via native event function)',
-  },
-  progressBar: {
-    screen: ProgressBar,
-    title: 'Progress bar',
-  },
-  differentSpringConfigs: {
-    screen: DifferentSpringConfigs,
-    title: 'Different Spring Configs',
-  },
-  transitionsSequence: {
-    screen: TransitionsSequence,
-    title: 'Transitions sequence',
-  },
-  transitionsShuffle: {
-    screen: TransitionsShuffle,
-    title: 'Transitions shuffle',
-  },
-  transitionsProgress: {
-    screen: TransitionsProgress,
-    title: 'Transitions progress bar',
-  },
-  transitionsTicket: {
-    screen: TransitionsTicket,
-    title: 'Transitions – flight ticket demo',
-  },
+export default function App() {
+  const testImg1 =
+    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356921&di=bc5c9d7ce4914560833910f2d138353f&imgtype=0&src=http%3A%2F%2Fe.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fd62a6059252dd42a1c362a29033b5bb5c9eab870.jpg'
+  const testImg2 =
+    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587810356919&di=55acd8a776a2d38b8a610b693a6af639&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F20%2F62%2F01000000000000119086280352820.jpg'
+
+  const [image, setImage] = useState(testImg1)
+
+  const [fadeInOutVisible, setFadeInOutVisible] = useState(false)
+  const handleChangeTab = ({ i }) => {
+    console.log(i)
+  }
+  const handlePress = (item) => {
+    console.log('handlePress')
+    setImage(item)
+  }
+  // return <PressBox />
+
+  const process = timing({ duration: 1000 })
+
+  const handleToggle = () => {
+    setFadeInOutVisible(!fadeInOutVisible)
+  }
+
+  // return <TabViewExample />
+  return (
+    <View style={[styles.container]}>
+      {/* <CircularProgressBar
+        backgroundColor='#000'
+        Radius={100}
+        barColor='#fff'
+        process={process}
+        BarSize={10}
+        trackColor="orange"
+      /> */}
+
+      {/* <Wallet /> */}
+      {/* <Swiper /> */}
+
+      {/* <ScrollableTabView
+        prerenderingSiblingsNumber={1} // 预渲染所有子tab
+        initialPage={0}
+        onChangeTab={handleChangeTab}
+        tabBarPosition={TabBarPosition.overlayTop}
+        contentProps={{ bounces: true }}
+      >
+        {assets.map((source, i) => (
+          <View key={source} style={styles.picture} tabLabel={i}>
+            <Image
+              resizeMethod='resize'
+              source={source}
+              style={{
+                width: '100%',
+                height: '100%',
+                resizeMode: 'cover',
+              }}
+            />
+          </View>
+        ))}
+      </ScrollableTabView> */}
+
+      {/* <FadeInOut visible={fadeInOutVisible} unmountChildrenWhenInvisible>
+        <TestChildren />
+      </FadeInOut>
+
+      <Text style={{ color: '#000' }}>{fadeInOutVisible + ''}</Text>
+
+      <Button title='TOGGLE' onPress={handleToggle}></Button> */}
+      {/* <MambaConsole /> */}
+      {/* <FancyImage /> */}
+
+      <DemoTiming />
+    </View>
+  )
 }
-
-class MainScreen extends React.Component {
-  static navigationOptions = {
-    title: '🎬 Reanimated Examples',
-  }
-
-  render() {
-    const data = Object.keys(SCREENS).map((key) => ({ key }))
-    return (
-      <FlatList
-        style={styles.list}
-        data={data}
-        ItemSeparatorComponent={ItemSeparator}
-        renderItem={(props) => (
-          <MainScreenItem
-            {...props}
-            onPressItem={({ key }) => this.props.navigation.navigate(key)}
-          />
-        )}
-        renderScrollComponent={(props) => <ScrollView {...props} />}
-      />
-    )
-  }
-}
-
-const ItemSeparator = () => <View style={styles.separator} />
-
-class MainScreenItem extends React.Component {
-  _onPress = () => this.props.onPressItem(this.props.item)
-  render() {
-    const { key } = this.props.item
-    return (
-      <RectButton style={styles.button} onPress={this._onPress}>
-        <Text style={styles.buttonText}>{SCREENS[key].title || key}</Text>
-      </RectButton>
-    )
-  }
-}
-
-const ExampleApp = createStackNavigator(
-  {
-    Main: { screen: MainScreen },
-    ...SCREENS,
-    ...INTERACTABLE_SCREENS,
-  },
-  {
-    initialRouteName: 'Main',
-    headerMode: 'screen',
-  }
-)
 
 const styles = StyleSheet.create({
-  list: {
-    backgroundColor: '#EFEFF4',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#DBDBE0',
-  },
-  buttonText: {
-    backgroundColor: 'transparent',
-  },
-  button: {
+  container: {
     flex: 1,
-    height: 60,
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    color: '#000',
+  },
+  picture: {
+    width,
+    flex: 1,
+    overflow: 'hidden',
+    borderColor: 'red',
+    borderWidth: 1,
   },
 })
-
-const createApp = Platform.select({
-  default: (input) => createAppContainer(input),
-})
-
-export default createApp(ExampleApp)
