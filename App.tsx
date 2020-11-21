@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image, SafeAreaView, Button } from 'react-native'
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler'
 import BetterImage from './src/BetterImage'
@@ -22,6 +22,7 @@ import MambaConsole from './src/MambaConsole'
 import Movable from './src/Movable'
 import FancyImage from './src/FancyImage'
 import DemoTiming from './src/Demo/Timing'
+import SwingBall from './src/SwingBall'
 
 // MambaConsole.setup()
 
@@ -42,7 +43,14 @@ export default function App() {
 
   const [image, setImage] = useState(testImg1)
 
+  const [step, setStep] = useState(0)
+
   const [fadeInOutVisible, setFadeInOutVisible] = useState(false)
+
+  const handleStep = () => {
+    let nextStep = step + 1
+    setStep(nextStep)
+  }
   const handleChangeTab = ({ i }) => {
     console.log(i)
   }
@@ -105,7 +113,14 @@ export default function App() {
       {/* <MambaConsole /> */}
       {/* <FancyImage /> */}
 
-      <DemoTiming />
+      {/* <DemoTiming /> */}
+      {step > 0 && <SwingBall />}
+      {step > 1 && <SwingBall containerStyle={{ right: 50 }} />}
+      {step > 2 && <SwingBall containerStyle={{ left: 50 }} />}
+
+      <View>
+        <Button title='add' onPress={handleStep}></Button>
+      </View>
     </View>
   )
 }
