@@ -114,13 +114,14 @@ export default function App() {
       {/* <FancyImage /> */}
 
       {/* <DemoTiming /> */}
-      {step > 0 && <SwingBall />}
+      <SwingBall />
+      {/* {step > 0 && <SwingBall />}
       {step > 1 && <SwingBall containerStyle={{ right: 50 }} />}
-      {step > 2 && <SwingBall containerStyle={{ left: 50 }} />}
+      {step > 2 && <SwingBall containerStyle={{ left: 50 }} />} */}
 
-      <View>
+      {/* <View>
         <Button title='add' onPress={handleStep}></Button>
-      </View>
+      </View> */}
     </View>
   )
 }

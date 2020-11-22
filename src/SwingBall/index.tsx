@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import Animated, {
   block,
   call,
   clockRunning,
+  color,
   concat,
   cond,
   Easing,
@@ -11,6 +12,7 @@ import Animated, {
   interpolate,
   not,
   set,
+  SpringUtils,
 } from 'react-native-reanimated'
 import { loop, spring } from 'react-native-redash'
 import Svg, { Path } from 'react-native-svg'
@@ -32,23 +34,10 @@ class index extends Component<Props> {
   private fallingAnimationValue = new Animated.Value<number>(0)
   private swingAnimationValue = new Animated.Value<number>(0)
 
-  private c1_to = {
-    x: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 0.5, 1],
-      outputRange: [ContainerWidth / 2, 0, ContainerWidth / 2],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-    y: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 1],
-      outputRange: [0, ContainerHeight],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-  }
-
   private c1_p1 = {
     x: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 0.5, 1],
-      outputRange: [ContainerWidth / 2, ContainerWidth, ContainerWidth / 2],
+      inputRange: [0.1, 0.25, 0.5, 0.7, 1],
+      outputRange: [ContainerWidth / 2, 0, ContainerWidth / 2, 0, ContainerWidth / 2],
       extrapolate: Extrapolate.CLAMP,
     }),
     y: interpolate(this.fallingAnimationValue, {
@@ -60,35 +49,9 @@ class index extends Component<Props> {
 
   private c1_p2 = {
     x: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 1],
-      outputRange: [ContainerWidth / 2, ContainerWidth / 2],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-    y: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 1],
-      outputRange: [0, ContainerHeight],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-  }
-
-  private c2_to = {
-    x: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 0.5, 1, 1.5, 2],
-      outputRange: [ContainerWidth / 2, 0, ContainerWidth / 2, 0, ContainerWidth / 2],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-    y: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 2],
-      outputRange: [0, ContainerHeight],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-  }
-
-  private c2_p1 = {
-    x: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 0.5, 1, 1.5, 2],
+      inputRange: [0.2, 0.25, 0.5, 0.8, 1],
       outputRange: [
-        ContainerWidth / 2,
+        ContainerWidth /2 ,
         ContainerWidth,
         ContainerWidth / 2,
         ContainerWidth,
@@ -97,24 +60,26 @@ class index extends Component<Props> {
       extrapolate: Extrapolate.CLAMP,
     }),
     y: interpolate(this.fallingAnimationValue, {
-      inputRange: [1, 2],
-      outputRange: [ContainerHeight * 0.5, ContainerHeight],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-  }
-
-  private c2_p2 = {
-    x: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 2],
-      outputRange: [ContainerWidth / 2, ContainerWidth / 2],
-      extrapolate: Extrapolate.CLAMP,
-    }),
-    y: interpolate(this.fallingAnimationValue, {
-      inputRange: [0, 2],
+      inputRange: [0, 1.2],
       outputRange: [0, ContainerHeight],
       extrapolate: Extrapolate.CLAMP,
     }),
   }
+
+  private c1_to = {
+    x: interpolate(this.fallingAnimationValue, {
+      inputRange: [0, 1],
+      outputRange: [ContainerWidth / 2, ContainerWidth / 2],
+      extrapolate: Extrapolate.CLAMP,
+    }),
+    y: interpolate(this.fallingAnimationValue, {
+      inputRange: [0, 1],
+      outputRange: [0, ContainerHeight],
+      extrapolate: Extrapolate.CLAMP,
+    }),
+  }
+
+  
 
   private fallAnimationStyle: StyleProp<Animated.AnimateStyle<ViewStyle>> = {
     transform: [
@@ -151,11 +116,7 @@ class index extends Component<Props> {
       c1: this.c1_p1,
       c2: this.c1_p2,
     })
-    // curveTo(commands, {
-    //   to: this.c2_to,
-    //   c1: this.c2_p1,
-    //   c2: this.c2_p2,
-    // })
+
     const d = commands.reduce((acc, c) => concat(acc, c))
     return d
   }
@@ -168,6 +129,11 @@ class index extends Component<Props> {
 
   render() {
     const d = this.getD()
+    const configC = SpringUtils.makeConfigFromOrigamiTensionAndFriction({
+      ...SpringUtils.makeDefaultConfig(),
+      tension: 10,
+      friction: 2,
+    });
     return (
       <>
         <Animated.View
@@ -179,14 +145,14 @@ class index extends Component<Props> {
         >
           <Svg
             fill='transparent'
-            stroke='red'
             style={styles.svgContainer}
             height='100%'
             width='100%'
             viewBox='0 0 56 156'
           >
-            <AnimatedPath d={d} stroke='black' strokeWidth={2} />
+            <AnimatedPath d={d} stroke='black' strokeWidth={1} />
           </Svg>
+
           <Animated.View style={StyleSheet.flatten([styles.ball, this.fallAnimationStyle])} />
         </Animated.View>
         <Animated.Code
@@ -198,8 +164,8 @@ class index extends Component<Props> {
                 from: this.fallingAnimationValue,
                 to: 1,
                 config: {
-                  stiffness: 130,
-                },
+                  ...configC,
+                }
               })
             ),
             set(
@@ -241,6 +207,13 @@ const styles = StyleSheet.create({
     height: '100%',
     top: 0,
     backgroundColor: '#000',
+  },
+  point: {
+    width: 10,
+    height: 10,
+    backgroundColor: 'pink',
+    borderRadius: 5,
+    position: 'absolute',
   },
 })
 
