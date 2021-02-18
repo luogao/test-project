@@ -18,8 +18,8 @@ export const lineTo = (
 }
 
 interface Point {
-  x: Animated.Node<number>
-  y: Animated.Node<number>
+  x: Animated.Adaptable<number>
+  y: Animated.Adaptable<number>
 }
 
 interface Curve {

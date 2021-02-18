@@ -24,6 +24,7 @@ import FancyImage from './src/FancyImage'
 import DemoTiming from './src/Demo/Timing'
 import SwingBall from './src/SwingBall'
 import Particle from './src/Particle'
+import StickyShape from './src/StickyShape'
 
 // MambaConsole.setup()
 
@@ -116,7 +117,8 @@ export default function App() {
 
       {/* <DemoTiming /> */}
       {/* <SwingBall /> */}
-      <Particle />
+      {/* <Particle /> */}
+      <StickyShape/>
       {/* {step > 0 && <SwingBall />}
       {step > 1 && <SwingBall containerStyle={{ right: 50 }} />}
       {step > 2 && <SwingBall containerStyle={{ left: 50 }} />} */}
