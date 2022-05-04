@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, Image, SafeAreaView, Button } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  Button,
+} from 'react-native'
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler'
 import BetterImage from './src/BetterImage'
 import SmallImage from './src/SmallImage'
@@ -25,6 +32,7 @@ import DemoTiming from './src/Demo/Timing'
 import SwingBall from './src/SwingBall'
 import Particle from './src/Particle'
 import StickyShape from './src/StickyShape'
+import TouchWithFeedbackDemo from './src/TouchWithFeedback/Demo'
 
 // MambaConsole.setup()
 
@@ -118,7 +126,8 @@ export default function App() {
       {/* <DemoTiming /> */}
       {/* <SwingBall /> */}
       {/* <Particle /> */}
-      <StickyShape/>
+      {/* <StickyShape/> */}
+      <TouchWithFeedbackDemo />
       {/* {step > 0 && <SwingBall />}
       {step > 1 && <SwingBall containerStyle={{ right: 50 }} />}
       {step > 2 && <SwingBall containerStyle={{ left: 50 }} />} */}
